@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./Login.css";
-import http from "../../APi/http";
-import { NavLink } from "react-router-dom";
+import { http } from "../../APi/commonApi";
+import { NavLink, useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 function Login() {
-  const [msg, SetMsg] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    let token = JSON.parse(localStorage.getItem("Data"));
+    // console.log(token);
+    // console.log(token);
+    if (token !== null) {
+      navigate("/home");
+    }
+  }, [navigate]);
   function FormData(e) {
     e.preventDefault();
     let data = Array.from(e.target)
@@ -20,20 +29,20 @@ function Login() {
       .post("/login", data)
       .then((res) => {
         if (res.status === 200) {
-          SetMsg("Login Sucessfully...");
-          localStorage.setItem("Token", JSON.stringify(res.data.token));
+          swal("", "Login Sucessfully...", "success");
+          // swal('Sucess',"Login Sucessfully...");
+          localStorage.setItem("Data", JSON.stringify(res.data));
           setTimeout(() => {
             window.location.replace("/home");
           }, 2000);
         }
       })
       .catch((err) => {
-        console.log(err.response.status);
-        SetMsg("invalid username & password...");
-        localStorage.setItem("Token", null);
+        console.log(err);
+        swal("Unauhorized", "Invalid username & password...", "error");
+        localStorage.removeItem("Data");
       });
     setTimeout(() => {
-      SetMsg("");
       document.getElementById("form").reset();
     }, 2000);
   }
@@ -43,17 +52,6 @@ function Login() {
         <div className="modal-header">
           <h5 className="modal-title text-center">LogIn</h5>
         </div>
-        <input
-          type={msg ? "text" : "hidden"}
-          className={
-            msg.startsWith("Login")
-              ? "alert alert-primary m-1 p-1"
-              : "alert alert-danger m-1 p-1"
-          }
-          role="alert"
-          value={msg}
-          readOnly
-        />
         <div className="modal-body">
           <form name="form" id="form" onSubmit={(event) => FormData(event)}>
             <div className="mb-3">

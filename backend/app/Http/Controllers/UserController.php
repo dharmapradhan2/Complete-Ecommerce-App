@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-        $data=$request->validate([
+        $request->validate([
             'name'=>'required',
             'password'=>'required',
         ]);
@@ -32,7 +32,7 @@ class UserController extends Controller
         $search=User::where('name',$request->name)->where('password',$request->password)->first();
         if (!is_null($search)) {
             $token=$search->createToken('Token')->accessToken;
-            return response()->json(['token'=>$token],200);
+            return response()->json(['token'=>$token,'uid'=>$search->uid],200);
         } else {
             return response()->json(['error'=>'Unauthorized access..'],401);
         }
@@ -57,8 +57,8 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'=>'required',
-            'password'=>'required',
+            'name'=>'required|min:6|string',
+            'password'=>'required|min:8',
         ]);
         //searching user for unique
         $search=User::where('name',$request->name)->get();
@@ -67,11 +67,11 @@ class UserController extends Controller
                 'name'=>$request['name'],
                 'password'=>$request['password'],
             ]);
-            return response()->json('Registrtion Sucessfull..');
+            return response()->json(['sucess'=>'Registrtion Sucessfull..'],200);
         } else {
-            return response()->json('Username is Already Present...');
+            return response()->json(['warning'=>'Username is Already Present...'],201);
         }
-        return response()->json(compact('request'));
+        return response()->json('request');
     }
     /**
      * Display the specified resource.
