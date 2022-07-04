@@ -5,17 +5,31 @@ import { useNavigate } from "react-router-dom";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import swal from "sweetalert";
 function Checkout() {
+  const [cartData, setCartData] = useState([]);
   const navigate = useNavigate();
   const [temp, SetTemp] = useState({
     price: 0,
     pname: [],
     uid: 0,
   });
+  const cartDetails = async () => {
+    const data = JSON.parse(localStorage.getItem("Data"));
+    await cart
+      .post("cartDetails", { uid: data.uid })
+      .then((res) => {
+        // console.log(res);
+        setCartData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
+    cartDetails();
     SetTemp(JSON.parse(localStorage.getItem("temp")));
   }, [SetTemp]);
   let prodList = Object.values(temp.pname).join(", ");
-  // console.log(prodList);
+  // console.log(cartData);
   const [paid, setPaid] = useState(false);
   const [error, setError] = useState("");
   const [order, SetOrder] = useState({});
@@ -40,8 +54,12 @@ function Checkout() {
       orderId: order.id,
       order_time: order.create_time,
       orderedItems: order.purchase_units[0].description,
+      merchant_id: order.purchase_units[0].payee.merchant_id,
       price: +order.purchase_units[0].amount.value,
       email: order.payer.email_address,
+      shipping: [
+        order.purchase_units[0].shipping.name.full_name,Object.values(order.purchase_units[0].shipping.address)
+      ],
       uid: temp.uid,
       full_name: Object.values(order.payer.name).join(" "),
     };
@@ -62,6 +80,7 @@ function Checkout() {
         }, 1000);
       });
     };
+    console.log(orderedData);
     storeOrder();
   }
   if (error) {

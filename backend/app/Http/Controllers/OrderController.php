@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\order;
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -55,8 +56,11 @@ class OrderController extends Controller
                 'email' => $request['email'],
                 'uid' => $request['uid'],
                 'price' => $request['price'],
-                'full_name' => $request['full_name'],
+                'full_name' => $request['full_name'], 
             ]);
+            Mail::send('emails.mail',$request->toArray(),function($msg){
+                $msg->to('dharma.pradhan@nettantra.com','Send Mail')->subject('Success');
+            });
             if ($order) {
                 $cart = Cart::where('uid', $request->uid)->delete();
                 return response()->json(['success' => 'Your order successfully placed.'], 200);
