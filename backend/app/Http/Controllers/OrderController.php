@@ -55,8 +55,10 @@ class OrderController extends Controller
                 'email' => $request['email'],
                 'uid' => $request['uid'],
                 'price' => $request['price'],
-                'full_name' => $request['full_name'], 
+                'full_name' => $request['full_name'],
             ]);
+           
+            
             if ($order) {
                 $cart = Cart::where('uid', $request->uid)->delete();
                 return response()->json(['success' => 'Your order successfully placed.'], 200);

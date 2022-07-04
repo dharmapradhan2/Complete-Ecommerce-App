@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Invoice;
 use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,4 @@ Route::get('/', function () {
 });
 // Route::get('/email',[MailController::class,'index']);
 
-Route::get('/email', function () {
-    return view('emails.mail');
-});
+Route::get('/email', [Invoice::class, 'sendMAil']);
