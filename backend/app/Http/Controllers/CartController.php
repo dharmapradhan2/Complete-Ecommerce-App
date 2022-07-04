@@ -27,7 +27,22 @@ class CartController extends Controller
     {
         //
     }
-
+    // email: "dharma.pradhan@personal.example.com"
+    // full_name: "Dharma Pradhan"
+    // merchant_id: "J9ACZXB7VR7CY"
+    // orderId: "4G695425YU457174L"
+    // order_time: "2022-07-04T05:44:49Z"
+    // orderedItems: "Red T-shirts, Green T-shirts"
+    // price: 8.94
+    // shipping: Array(2)
+    // 0: "Nikhil Narayan"
+    // 1: Array(6)
+    // 0: "qwefer"
+    // 1: "1"
+    // 2: "asdfsaf"
+    // 3: "DE"
+    // 4: "34575"
+    // 5: "US"
     /**
      * Store a newly created resource in storage.
      *
