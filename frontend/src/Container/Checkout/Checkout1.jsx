@@ -58,7 +58,8 @@ function Checkout() {
       price: +order.purchase_units[0].amount.value,
       email: order.payer.email_address,
       shipping: [
-        order.purchase_units[0].shipping.name.full_name,Object.values(order.purchase_units[0].shipping.address)
+        order.purchase_units[0].shipping.name.full_name,
+        Object.values(order.purchase_units[0].shipping.address),
       ],
       uid: temp.uid,
       full_name: Object.values(order.payer.name).join(" "),
@@ -80,8 +81,8 @@ function Checkout() {
         }, 1000);
       });
     };
-    console.log(orderedData);
-    storeOrder();
+    // console.log(orderedData);
+    // storeOrder();
   }
   if (error) {
     // display error message & redirect to error page
